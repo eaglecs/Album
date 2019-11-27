@@ -27,6 +27,8 @@ public abstract class BasicChoiceWrapper<Returner extends BasicChoiceWrapper, Re
 
     boolean mHasCamera = true;
     int mColumnCount = 2;
+    Double lat;
+    Double lng;
 
     Filter<Long> mSizeFilter;
     Filter<String> mMimeTypeFilter;
@@ -42,6 +44,12 @@ public abstract class BasicChoiceWrapper<Returner extends BasicChoiceWrapper, Re
      */
     public Returner camera(boolean hasCamera) {
         this.mHasCamera = hasCamera;
+        return (Returner) this;
+    }
+
+    public Returner filterLocation(Double lat, Double lng) {
+        this.lat = lat;
+        this.lng = lng;
         return (Returner) this;
     }
 

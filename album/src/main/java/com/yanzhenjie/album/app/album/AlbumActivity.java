@@ -18,6 +18,7 @@ package com.yanzhenjie.album.app.album;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -48,6 +49,8 @@ import com.yanzhenjie.mediascanner.MediaScanner;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -67,6 +70,8 @@ public class AlbumActivity extends BaseActivity implements
     public static Filter<Long> sSizeFilter;
     public static Filter<String> sMimeFilter;
     public static Filter<Long> sDurationFilter;
+    public static Double lat;
+    public static Double lng;
 
     public static Action<ArrayList<AlbumFile>> sResult;
     public static Action<String> sCancel;
@@ -193,6 +198,49 @@ public class AlbumActivity extends BaseActivity implements
         }
 
         mView.setLoadingDisplay(false);
+
+        if (lat > 0 || lng > 0) {
+            for (int i = 0; i < albumFolders.size(); i++) {
+                AlbumFolder albumFolder = albumFolders.get(i);
+                ArrayList<AlbumFile> albumFiles = albumFolder.getAlbumFiles();
+                ArrayList<AlbumFile> albumFilesHasLocation = new ArrayList<>();
+                ArrayList<AlbumFile> albumFilesNoLocation = new ArrayList<>();
+                for (int j = 0; j < albumFiles.size(); j++) {
+                    AlbumFile albumFile = albumFiles.get(j);
+                    if (albumFile.getLatitude() > 0 || albumFile.getLongitude() > 0) {
+                        albumFilesHasLocation.add(albumFile);
+                    } else {
+                        albumFilesNoLocation.add(albumFile);
+                    }
+                }
+                Collections.sort(albumFilesHasLocation, new Comparator<AlbumFile>() {
+                    @Override
+                    public int compare(AlbumFile albumFile1, AlbumFile albumFile2) {
+                        double lat1 = albumFile1.getLatitude();
+                        double lng1 = albumFile1.getLongitude();
+                        double lat2 = albumFile2.getLatitude();
+                        double lng2 = albumFile2.getLongitude();
+                        Location locationAlbum1 = new Location("Location Album 1");
+                        locationAlbum1.setLatitude(lat1);
+                        locationAlbum1.setLongitude(lng1);
+                        Location locationAlbum2 = new Location("Location Album 2");
+                        locationAlbum2.setLatitude(lat2);
+                        locationAlbum2.setLongitude(lng2);
+                        Location locationUser = new Location("Location User");
+                        locationUser.setLatitude(lat);
+                        locationUser.setLongitude(lng);
+                        float distanceToAlbum1 = locationUser.distanceTo(locationAlbum1);
+                        float distanceToAlbum2 = locationUser.distanceTo(locationAlbum2);
+                        return Double.compare(distanceToAlbum1, distanceToAlbum2);
+                    }
+                });
+
+                albumFolder.getAlbumFiles().clear();
+                albumFolder.addAlbumFiles(albumFilesHasLocation);
+                albumFolder.addAlbumFiles(albumFilesNoLocation);
+            }
+        }
+
         mAlbumFolders = albumFolders;
         mCheckedList = checkedFiles;
 

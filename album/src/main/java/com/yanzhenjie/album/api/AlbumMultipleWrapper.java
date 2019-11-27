@@ -72,6 +72,8 @@ public class AlbumMultipleWrapper extends BasicChoiceAlbumWrapper<AlbumMultipleW
     @Override
     public void start() {
         AlbumActivity.sSizeFilter = mSizeFilter;
+        AlbumActivity.lat = lat;
+        AlbumActivity.lng = lng;
         AlbumActivity.sMimeFilter = mMimeTypeFilter;
         AlbumActivity.sDurationFilter = mDurationFilter;
         AlbumActivity.sResult = mResult;

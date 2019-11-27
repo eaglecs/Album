@@ -60,6 +60,8 @@ public final class ImageMultipleWrapper extends BasicChoiceWrapper<ImageMultiple
     @Override
     public void start() {
         AlbumActivity.sSizeFilter = mSizeFilter;
+        AlbumActivity.lat = lat;
+        AlbumActivity.lng = lng;
         AlbumActivity.sMimeFilter = mMimeTypeFilter;
         AlbumActivity.sResult = mResult;
         AlbumActivity.sCancel = mCancel;

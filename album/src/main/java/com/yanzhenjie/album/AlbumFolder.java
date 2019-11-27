@@ -54,6 +54,10 @@ public class AlbumFolder implements Parcelable {
         return mAlbumFiles;
     }
 
+    public void addAlbumFiles(ArrayList<AlbumFile> albumFiles) {
+        mAlbumFiles.addAll(albumFiles);
+    }
+
     public void addAlbumFile(AlbumFile albumFile) {
         mAlbumFiles.add(albumFile);
     }

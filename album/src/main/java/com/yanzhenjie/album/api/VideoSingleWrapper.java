@@ -49,6 +49,8 @@ public final class VideoSingleWrapper extends BasicChoiceVideoWrapper<VideoSingl
     @Override
     public void start() {
         AlbumActivity.sSizeFilter = mSizeFilter;
+        AlbumActivity.lat = lat;
+        AlbumActivity.lng = lng;
         AlbumActivity.sMimeFilter = mMimeTypeFilter;
         AlbumActivity.sDurationFilter = mDurationFilter;
         AlbumActivity.sResult = mResult;

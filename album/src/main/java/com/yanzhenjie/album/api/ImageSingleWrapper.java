@@ -36,6 +36,8 @@ public final class ImageSingleWrapper extends BasicChoiceWrapper<ImageSingleWrap
     @Override
     public void start() {
         AlbumActivity.sSizeFilter = mSizeFilter;
+        AlbumActivity.lat = lat;
+        AlbumActivity.lng = lng;
         AlbumActivity.sMimeFilter = mMimeTypeFilter;
         AlbumActivity.sResult = mResult;
         AlbumActivity.sCancel = mCancel;

@@ -50,6 +50,8 @@ public class AlbumSingleWrapper extends BasicChoiceAlbumWrapper<AlbumSingleWrapp
     @Override
     public void start() {
         AlbumActivity.sSizeFilter = mSizeFilter;
+        AlbumActivity.lat = lat;
+        AlbumActivity.lng = lng;
         AlbumActivity.sMimeFilter = mMimeTypeFilter;
         AlbumActivity.sDurationFilter = mDurationFilter;
         AlbumActivity.sResult = mResult;
