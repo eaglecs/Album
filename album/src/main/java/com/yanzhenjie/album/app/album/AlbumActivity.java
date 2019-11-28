@@ -207,15 +207,6 @@ public class AlbumActivity extends BaseActivity implements
                 ArrayList<AlbumFile> albumFilesNoLocation = new ArrayList<>();
                 for (int j = 0; j < albumFiles.size(); j++) {
                     AlbumFile albumFile = albumFiles.get(j);
-                    if (j == 0) {
-                        albumFile.setLatitude(22.8203548f);
-                        albumFile.setLongitude(104.9873867f);
-                    }
-                    if (j == 1) {
-                        albumFile.setLatitude(21.0227387f);
-                        albumFile.setLongitude(105.8194541f);
-                    }
-
                     if (albumFile.getLatitude() > 0 || albumFile.getLongitude() > 0) {
                         albumFilesHasLocation.add(albumFile);
                     } else {
