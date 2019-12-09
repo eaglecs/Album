@@ -27,8 +27,8 @@ public abstract class BasicChoiceWrapper<Returner extends BasicChoiceWrapper, Re
 
     boolean mHasCamera = true;
     int mColumnCount = 2;
-    Double lat;
-    Double lng;
+    Double lat = 0.0;
+    Double lng = 0.0;
 
     Filter<Long> mSizeFilter;
     Filter<String> mMimeTypeFilter;
