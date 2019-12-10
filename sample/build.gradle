@@ -14,8 +14,9 @@ android {
 }
 
 dependencies {
-    implementation rootProject.ext.dependencies.album
-
+//    implementation rootProject.ext.dependencies.album
+//    implementation 'com.github.eaglecs:Album:2.1.6'
+    implementation project(':album')
     implementation rootProject.ext.dependencies.appCompat
     implementation rootProject.ext.dependencies.design
     implementation rootProject.ext.dependencies.recyclerView

@@ -213,6 +213,7 @@ public class AlbumActivity extends BaseActivity implements
                         albumFilesNoLocation.add(albumFile);
                     }
                 }
+
                 Collections.sort(albumFilesHasLocation, new Comparator<AlbumFile>() {
                     @Override
                     public int compare(AlbumFile albumFile1, AlbumFile albumFile2) {
