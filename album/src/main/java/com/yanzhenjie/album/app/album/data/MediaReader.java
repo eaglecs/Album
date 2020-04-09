@@ -18,6 +18,8 @@ package com.yanzhenjie.album.app.album.data;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.media.ExifInterface;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.WorkerThread;
 
@@ -26,6 +28,7 @@ import com.yanzhenjie.album.AlbumFolder;
 import com.yanzhenjie.album.Filter;
 import com.yanzhenjie.album.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -85,6 +88,21 @@ public class MediaReader {
                 long addDate = cursor.getLong(3);
                 float latitude = cursor.getFloat(4);
                 float longitude = cursor.getFloat(5);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    try {
+                        ExifInterface exifInterface = new ExifInterface(path);
+                        float[] latLong = new float[2];
+                        boolean isHasLatLng = exifInterface.getLatLong(latLong);
+                        if (isHasLatLng) {
+                            latitude = latLong[0];
+                            longitude = latLong[1];
+                        }
+                    } catch (IOException e) {
+                        latitude = 0f;
+                        longitude = 0f;
+                    }
+                }
                 long size = cursor.getLong(6);
 
                 AlbumFile imageFile = new AlbumFile();

@@ -67,7 +67,7 @@ class AlbumView extends Contract.AlbumView implements View.OnClickListener {
         this.mActivity = activity;
 
         this.mToolbar = activity.findViewById(R.id.toolbar);
-        this.mRecyclerView = activity.findViewById(R.id.recycler_view);
+        this.mRecyclerView = activity.findViewById(R.id.rvPhoto);
 
         this.mBtnSwitchFolder = activity.findViewById(R.id.btn_switch_dir);
         this.mBtnPreview = activity.findViewById(R.id.btn_preview);

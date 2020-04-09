@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     Copyright 2017 Yan Zhenjie.
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,10 +14,25 @@
     limitations under the License.
 -->
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        style="@style/Album.WrapContent.WidthMatchParent"
-        android:layout_below="@id/app_bar_layout" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/app_bar_layout"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_suggest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/albumColorPrimary"
+            android:minHeight="100dp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvPhoto"
+            style="@style/Album.WrapContent.WidthMatchParent" />
+    </LinearLayout>
+
 
     <RelativeLayout
         style="@style/Album.MatchParent.SheetBottom"
@@ -28,8 +42,8 @@
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_switch_dir"
             style="@style/Album.TextButton.WrapContent.SheetBottom"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:drawableEnd="@drawable/album_abc_spinner_white"
             android:drawableRight="@drawable/album_abc_spinner_white" />
 
@@ -38,8 +52,8 @@
             style="@style/Album.TextButton.WrapContent.SheetBottom"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:drawableLeft="@drawable/album_ic_eye_white"
-            android:drawableStart="@drawable/album_ic_eye_white" />
+            android:drawableStart="@drawable/album_ic_eye_white"
+            android:drawableLeft="@drawable/album_ic_eye_white" />
     </RelativeLayout>
 
     <LinearLayout
@@ -56,8 +70,8 @@
 
         <TextView
             style="@style/Album.WrapContent"
-            android:layout_marginLeft="@dimen/album_dp_20"
             android:layout_marginStart="@dimen/album_dp_20"
+            android:layout_marginLeft="@dimen/album_dp_20"
             android:text="@string/album_loading"
             android:textColor="@color/albumFontHint"
             android:textSize="@dimen/album_sp_16" />

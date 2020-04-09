@@ -15,10 +15,14 @@
  */
 package com.yanzhenjie.album.sample.app;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -77,12 +81,29 @@ public class ImageActivity extends AppCompatActivity {
      * Select picture, from album.
      */
     private void selectImage() {
+
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+            if(ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                getPhoto();
+            } else  {
+                String[] permissions = new String[]{Manifest.permission.ACCESS_MEDIA_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION};
+                ActivityCompat.requestPermissions(this,
+                        permissions, 100);
+
+            }
+        } else {
+            getPhoto();
+        }
+    }
+
+    private void getPhoto() {
         Album.image(this)
                 .multipleChoice()
                 .camera(true)
                 .columnCount(2)
                 .selectCount(6)
-                .filterLocation(16.0471659,108.1716866)
+                .filterLocation(10.7723388, 106.6892813)
                 .checkedList(mAlbumFiles)
                 .widget(
                         Widget.newDarkBuilder(this)
