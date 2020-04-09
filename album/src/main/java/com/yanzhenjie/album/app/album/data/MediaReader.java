@@ -88,7 +88,7 @@ public class MediaReader {
                 long addDate = cursor.getLong(3);
                 float latitude = cursor.getFloat(4);
                 float longitude = cursor.getFloat(5);
-
+                long size = cursor.getLong(6);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     try {
                         ExifInterface exifInterface = new ExifInterface(path);
@@ -103,8 +103,6 @@ public class MediaReader {
                         longitude = 0f;
                     }
                 }
-                long size = cursor.getLong(6);
-
                 AlbumFile imageFile = new AlbumFile();
                 imageFile.setMediaType(AlbumFile.TYPE_IMAGE);
                 imageFile.setPath(path);
