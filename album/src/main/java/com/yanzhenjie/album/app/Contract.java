@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.CompoundButton;
 
 import com.yanzhenjie.album.Album;
+import com.yanzhenjie.album.AlbumFile;
 import com.yanzhenjie.album.AlbumFolder;
 import com.yanzhenjie.album.api.widget.Widget;
 import com.yanzhenjie.album.mvp.BasePresenter;
@@ -48,7 +49,7 @@ public final class Contract {
         /**
          * Try to check item.
          *
-         * @param button view.
+         * @param button   view.
          * @param position position of item.
          */
         void tryCheckItem(CompoundButton button, int position);
@@ -81,13 +82,13 @@ public final class Contract {
         /**
          * Set some properties of the view.
          *
-         * @param widget {@link Widget}.
-         * @param column the count of columns.
-         * @param hasCamera the camera is enabled.
+         * @param widget     {@link Widget}.
+         * @param column     the count of columns.
+         * @param hasCamera  the camera is enabled.
          * @param choiceMode choice mode, one of {@link Album#FUNCTION_CHOICE_ALBUM}, {@link
-         *     Album#FUNCTION_CHOICE_IMAGE} or {@link Album#FUNCTION_CHOICE_VIDEO}.
+         *                   Album#FUNCTION_CHOICE_IMAGE} or {@link Album#FUNCTION_CHOICE_VIDEO}.
          */
-        public abstract void setupViews(Widget widget, int column, boolean hasCamera, int choiceMode);
+        public abstract void setupViews(Widget widget, int column, boolean hasCamera, int choiceMode, int radius, Double lat, Double lng);
 
         /**
          * Set the loading visibility.
@@ -123,6 +124,9 @@ public final class Contract {
          * @param position position of item.
          */
         public abstract void notifyInsertItem(int position);
+
+
+        public abstract void notifyInsertItem(int position, AlbumFile albumFile);
 
         /**
          * Notify item was changed.
@@ -218,7 +222,7 @@ public final class Contract {
         /**
          * Set some properties of the view.
          *
-         * @param widget {@link Widget}.
+         * @param widget    {@link Widget}.
          * @param checkable show the checkbox.
          */
         public abstract void setupViews(Widget widget, boolean checkable);

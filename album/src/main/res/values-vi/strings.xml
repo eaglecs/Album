@@ -78,6 +78,6 @@
 
     <string name="album_item_unavailable">Unavailable</string>
     <string name="album_take_file_unavailable">Unavailable file, please try again.</string>
-    <string name="album_text_suggest">Suggest</string>
-    <string name="album_recent">Recent</string>
+    <string name="album_text_suggest">Gợi ý</string>
+    <string name="album_recent">Gần đây</string>
 </resources>

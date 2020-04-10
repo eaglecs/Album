@@ -52,6 +52,7 @@ public class AlbumSingleWrapper extends BasicChoiceAlbumWrapper<AlbumSingleWrapp
         AlbumActivity.sSizeFilter = mSizeFilter;
         AlbumActivity.lat = lat;
         AlbumActivity.lng = lng;
+        AlbumActivity.radius = ratius;
         AlbumActivity.sMimeFilter = mMimeTypeFilter;
         AlbumActivity.sDurationFilter = mDurationFilter;
         AlbumActivity.sResult = mResult;

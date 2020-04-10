@@ -68,6 +68,10 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         this.mAlbumFiles = albumFiles;
     }
 
+    public void addItem(AlbumFile albumFile) {
+        mAlbumFiles.add(0, albumFile);
+    }
+
     public void setAddClickListener(OnItemClickListener addPhotoClickListener) {
         this.mAddPhotoClickListener = addPhotoClickListener;
     }
@@ -222,16 +226,20 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         @Override
         public void onClick(View v) {
-            if (v == itemView) {
-                int camera = hasCamera ? 1 : 0;
-                mItemClickListener.onItemClick(v, getAdapterPosition() - camera);
-            } else if (v == mCheckBox) {
-                int camera = hasCamera ? 1 : 0;
-                mCheckedClickListener.onCheckedClick(mCheckBox, getAdapterPosition() - camera);
-            } else if (v == mLayoutLayer) {
-                int camera = hasCamera ? 1 : 0;
-                mItemClickListener.onItemClick(v, getAdapterPosition() - camera);
+//            if (v == itemView) {
+//                int camera = hasCamera ? 1 : 0;
+//                mItemClickListener.onItemClick(v, getAdapterPosition() - camera);
+//            } else if (v == mCheckBox) {
+
+            if (v != mCheckBox) {
+                mCheckBox.setChecked(!mCheckBox.isChecked());
             }
+            int camera = hasCamera ? 1 : 0;
+            mCheckedClickListener.onCheckedClick(mCheckBox, getAdapterPosition() - camera);
+//            } else if (v == mLayoutLayer) {
+//                int camera = hasCamera ? 1 : 0;
+//                mItemClickListener.onItemClick(v, getAdapterPosition() - camera);
+//            }
         }
     }
 

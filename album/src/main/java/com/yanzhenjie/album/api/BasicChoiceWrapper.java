@@ -29,6 +29,7 @@ public abstract class BasicChoiceWrapper<Returner extends BasicChoiceWrapper, Re
     int mColumnCount = 2;
     Double lat = 0.0;
     Double lng = 0.0;
+    int ratius = 0;
 
     Filter<Long> mSizeFilter;
     Filter<String> mMimeTypeFilter;
@@ -50,6 +51,11 @@ public abstract class BasicChoiceWrapper<Returner extends BasicChoiceWrapper, Re
     public Returner filterLocation(Double lat, Double lng) {
         this.lat = lat;
         this.lng = lng;
+        return (Returner) this;
+    }
+
+    public Returner radius(int radius) {
+        this.ratius = radius;
         return (Returner) this;
     }
 

@@ -19,6 +19,8 @@ import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,6 +32,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
+import com.yanzhenjie.album.AlbumFile;
 import com.yanzhenjie.album.AlbumFolder;
 import com.yanzhenjie.album.R;
 import com.yanzhenjie.album.api.widget.Widget;
@@ -42,6 +45,8 @@ import com.yanzhenjie.album.util.SystemBar;
 import com.yanzhenjie.album.widget.ColorProgressBar;
 import com.yanzhenjie.album.widget.divider.Api21ItemDivider;
 
+import java.util.ArrayList;
+
 /**
  * Created by YanZhenjie on 2018/4/7.
  */
@@ -53,14 +58,23 @@ class AlbumView extends Contract.AlbumView implements View.OnClickListener {
     private MenuItem mCompleteMenu;
 
     private RecyclerView mRecyclerView;
+    private AppCompatTextView tvTitleSuggest;
+    private AppCompatTextView tvTitleRecent;
+    private RecyclerView rvSuggest;
     private GridLayoutManager mLayoutManager;
+    private GridLayoutManager mLayoutManagerSuggest;
     private AlbumAdapter mAdapter;
+    private AlbumAdapter mAdapterSuggest;
 
     private Button mBtnPreview;
     private Button mBtnSwitchFolder;
 
     private LinearLayout mLayoutLoading;
     private ColorProgressBar mProgressBar;
+    private int radius = 0;
+    private Double lat = 0.0;
+    private Double lng = 0.0;
+    private Boolean hasCamera = false;
 
     public AlbumView(Activity activity, Contract.AlbumPresenter presenter) {
         super(activity, presenter);
@@ -68,6 +82,9 @@ class AlbumView extends Contract.AlbumView implements View.OnClickListener {
 
         this.mToolbar = activity.findViewById(R.id.toolbar);
         this.mRecyclerView = activity.findViewById(R.id.rvPhoto);
+        this.tvTitleSuggest = activity.findViewById(R.id.tvTitleSuggest);
+        this.tvTitleRecent = activity.findViewById(R.id.tvTitleRecent);
+        this.rvSuggest = activity.findViewById(R.id.rvSuggest);
 
         this.mBtnSwitchFolder = activity.findViewById(R.id.btn_switch_dir);
         this.mBtnPreview = activity.findViewById(R.id.btn_preview);
@@ -95,9 +112,12 @@ class AlbumView extends Contract.AlbumView implements View.OnClickListener {
     }
 
     @Override
-    public void setupViews(Widget widget, int column, boolean hasCamera, int choiceMode) {
+    public void setupViews(Widget widget, int column, boolean hasCamera, int choiceMode, int radius, Double lat, Double lng) {
+        this.radius = radius;
+        this.lat = lat;
+        this.lng = lng;
+        this.hasCamera = hasCamera;
         SystemBar.setNavigationBarColor(mActivity, widget.getNavigationBarColor());
-
         int statusBarColor = widget.getStatusBarColor();
         if (widget.getUiStyle() == Widget.STYLE_LIGHT) {
             if (SystemBar.setStatusBarDarkFont(mActivity, true)) {
@@ -124,9 +144,28 @@ class AlbumView extends Contract.AlbumView implements View.OnClickListener {
 
         Configuration config = mActivity.getResources().getConfiguration();
         mLayoutManager = new GridLayoutManager(getContext(), column, getOrientation(config), false);
+        mLayoutManagerSuggest = new GridLayoutManager(getContext(), column, getOrientation(config), false);
         mRecyclerView.setLayoutManager(mLayoutManager);
+        rvSuggest.setLayoutManager(mLayoutManagerSuggest);
         int dividerSize = getResources().getDimensionPixelSize(R.dimen.album_dp_4);
         mRecyclerView.addItemDecoration(new Api21ItemDivider(Color.TRANSPARENT, dividerSize, dividerSize));
+        rvSuggest.addItemDecoration(new Api21ItemDivider(Color.TRANSPARENT, dividerSize, dividerSize));
+        mAdapterSuggest = new AlbumAdapter(getContext(), false, choiceMode, widget.getMediaItemCheckSelector());
+        mAdapterSuggest.setCheckedClickListener(new OnCheckedClickListener() {
+            @Override
+            public void onCheckedClick(CompoundButton button, int position) {
+                getPresenter().tryCheckItem(button, position);
+            }
+        });
+        mAdapterSuggest.setItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                getPresenter().tryPreviewItem(position);
+            }
+        });
+        rvSuggest.setAdapter(mAdapterSuggest);
+
+
         mAdapter = new AlbumAdapter(getContext(), hasCamera, choiceMode, widget.getMediaItemCheckSelector());
         mAdapter.setAddClickListener(new OnItemClickListener() {
             @Override
@@ -160,6 +199,11 @@ class AlbumView extends Contract.AlbumView implements View.OnClickListener {
         mLayoutManager.setOrientation(getOrientation(newConfig));
         mRecyclerView.setAdapter(mAdapter);
         mLayoutManager.scrollToPosition(position);
+
+        int positionSuggest = mLayoutManagerSuggest.findFirstVisibleItemPosition();
+        mLayoutManagerSuggest.setOrientation(getOrientation(newConfig));
+        rvSuggest.setAdapter(mAdapterSuggest);
+        mLayoutManagerSuggest.scrollToPosition(positionSuggest);
     }
 
     @RecyclerView.Orientation
@@ -184,15 +228,68 @@ class AlbumView extends Contract.AlbumView implements View.OnClickListener {
 
     @Override
     public void bindAlbumFolder(AlbumFolder albumFolder) {
+        if (mActivity instanceof AlbumActivity) {
+            ((AlbumActivity) mActivity).showLoadingDialog();
+        }
         mBtnSwitchFolder.setText(albumFolder.getName());
+        ArrayList<AlbumFile> albums = albumFolder.getAlbumFiles();
+        ArrayList<AlbumFile> albumsSuggest = new ArrayList<>();
+        ArrayList<AlbumFile> albumsRecent = new ArrayList<>();
+        if (radius > 0) {
+            for (int i = 0; i < albums.size(); i++) {
+                AlbumFile albumFile = albums.get(i);
+                if ((albumFile.getLongitude() > 0 || albumFile.getLatitude() > 0) && (lat > 0 || lng > 0)) {
+                    Location locationAlbum = new Location("Location Album 2");
+                    locationAlbum.setLatitude(albumFile.getLatitude());
+                    locationAlbum.setLongitude(albumFile.getLongitude());
+                    Location locationUser = new Location("Location User");
+                    locationUser.setLatitude(lat);
+                    locationUser.setLongitude(lng);
+                    float distanceToAlbum = locationUser.distanceTo(locationAlbum);
+                    if (distanceToAlbum <= radius) {
+                        albumsSuggest.add(albumFile);
+                    } else {
+                        albumsRecent.add(albumFile);
+                    }
+                } else {
+                    albumsRecent.add(albumFile);
+                }
+            }
+        } else {
+            albumsRecent.addAll(albums);
+        }
 
-        mAdapter.setAlbumFiles(albumFolder.getAlbumFiles());
+        mAdapterSuggest.setAlbumFiles(albumsSuggest);
+        mAdapterSuggest.notifyDataSetChanged();
+        if (albumsSuggest.isEmpty()) {
+            rvSuggest.setVisibility(View.GONE);
+            tvTitleSuggest.setVisibility(View.GONE);
+        } else {
+            rvSuggest.setVisibility(View.VISIBLE);
+            rvSuggest.scrollToPosition(0);
+            tvTitleSuggest.setVisibility(View.VISIBLE);
+        }
+
+        mAdapter.setAlbumFiles(albumsRecent);
         mAdapter.notifyDataSetChanged();
-        mRecyclerView.scrollToPosition(0);
+        if (!albumsRecent.isEmpty() || hasCamera) {
+            mRecyclerView.scrollToPosition(0);
+        }
+
+        if (mActivity instanceof AlbumActivity) {
+            ((AlbumActivity) mActivity).dismissLoadingDialog();
+        }
     }
 
     @Override
     public void notifyInsertItem(int position) {
+        mAdapter.notifyItemInserted(position);
+
+    }
+
+    @Override
+    public void notifyInsertItem(int position, AlbumFile albumFile) {
+        mAdapter.addItem(albumFile);
         mAdapter.notifyItemInserted(position);
     }
 

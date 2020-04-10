@@ -103,7 +103,8 @@ public class ImageActivity extends AppCompatActivity {
                 .camera(true)
                 .columnCount(2)
                 .selectCount(6)
-                .filterLocation(10.7723388, 106.6892813)
+                .radius(100)
+                .filterLocation(10.836945, 106.56528)
                 .checkedList(mAlbumFiles)
                 .widget(
                         Widget.newDarkBuilder(this)

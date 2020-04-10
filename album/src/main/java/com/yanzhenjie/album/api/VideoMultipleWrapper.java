@@ -73,6 +73,7 @@ public final class VideoMultipleWrapper extends BasicChoiceVideoWrapper<VideoMul
         AlbumActivity.sSizeFilter = mSizeFilter;
         AlbumActivity.lat = lat;
         AlbumActivity.lng = lng;
+        AlbumActivity.radius = ratius;
         AlbumActivity.sMimeFilter = mMimeTypeFilter;
         AlbumActivity.sDurationFilter = mDurationFilter;
         AlbumActivity.sResult = mResult;

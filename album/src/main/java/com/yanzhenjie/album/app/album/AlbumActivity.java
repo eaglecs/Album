@@ -72,6 +72,7 @@ public class AlbumActivity extends BaseActivity implements
     public static Filter<Long> sDurationFilter;
     public static Double lat = 0.0;
     public static Double lng = 0.0;
+    public static int radius = 0;
 
     public static Action<ArrayList<AlbumFile>> sResult;
     public static Action<String> sCancel;
@@ -108,7 +109,7 @@ public class AlbumActivity extends BaseActivity implements
         initializeArgument();
         setContentView(createView());
         mView = new AlbumView(this, this);
-        mView.setupViews(mWidget, mColumnCount, mHasCamera, mChoiceMode);
+        mView.setupViews(mWidget, mColumnCount, mHasCamera, mChoiceMode, radius, lat, lng);
         mView.setTitle(mWidget.getTitle());
         mView.setCompleteDisplay(false);
         mView.setLoadingDisplay(true);
@@ -436,7 +437,11 @@ public class AlbumActivity extends BaseActivity implements
             mView.bindAlbumFolder(albumFolder);
         } else {
             albumFiles.add(0, albumFile);
-            mView.notifyInsertItem(mHasCamera ? 1 : 0);
+            if(radius > 0){
+                mView.notifyInsertItem(mHasCamera ? 1 : 0, albumFile);
+            } else  {
+                mView.notifyInsertItem(mHasCamera ? 1 : 0);
+            }
         }
 
         mCheckedList.add(albumFile);
@@ -629,7 +634,7 @@ public class AlbumActivity extends BaseActivity implements
     /**
      * Display loading dialog.
      */
-    private void showLoadingDialog() {
+    public void showLoadingDialog() {
         if (mLoadingDialog == null) {
             mLoadingDialog = new LoadingDialog(this);
             mLoadingDialog.setupViews(mWidget);

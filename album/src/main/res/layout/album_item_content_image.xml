@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     Copyright 2017 Yan Zhenjie.
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,9 +14,10 @@
     limitations under the License.
 -->
 <com.yanzhenjie.album.widget.SquareCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/Album.Item.Card.MatchParent">
 
-    <RelativeLayout style="@style/Album.MatchParent">
+    <FrameLayout style="@style/Album.MatchParent">
 
         <ImageView
             android:id="@+id/iv_album_content_image"
@@ -25,22 +25,18 @@
             android:contentDescription="@string/album_title"
             android:scaleType="centerCrop" />
 
-        <com.yanzhenjie.album.widget.TransferLayout
-            style="@style/Album.WrapContent.Transfer"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true">
-
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/check_box"
-                style="@style/Album.CheckBox.WrapContent" />
-        </com.yanzhenjie.album.widget.TransferLayout>
-
-    </RelativeLayout>
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/check_box"
+            android:layout_width="@dimen/album_dp_30"
+            android:layout_height="@dimen/album_dp_30"
+            android:layout_gravity="end"/>
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/layout_layer"
         style="@style/Album.MatchParent"
-        android:background="@color/albumSheetLayer">
+        android:background="@color/albumSheetLayer"
+        tools:background="@color/albumFontLight">
 
         <TextView
             style="@style/Album.WrapContent"

@@ -78,4 +78,6 @@
 
     <string name="album_item_unavailable">Não disponível</string>
     <string name="album_take_file_unavailable">Arquivo indisponível, por favor tente novamente.</string>
+    <string name="album_text_suggest">Suggest</string>
+    <string name="album_recent">Recent</string>
 </resources>

@@ -211,6 +211,38 @@ public class AlbumFile implements Parcelable, Comparable<AlbumFile> {
         this.isDisable = disable;
     }
 
+    public AlbumFile clone() {
+        return new AlbumFile(
+                mPath,
+                mBucketName,
+                mMimeType,
+                mAddDate,
+                mLatitude,
+                mLongitude,
+                mSize,
+                mDuration,
+                mThumbPath,
+                mMediaType,
+                isChecked,
+                isDisable
+        );
+    }
+
+    public AlbumFile(String mPath, String mBucketName, String mMimeType, long mAddDate, float mLatitude, float mLongitude, long mSize, long mDuration, String mThumbPath, int mMediaType, Boolean isChecked, Boolean isDisable) {
+        this.mPath = mPath;
+        this.mBucketName = mBucketName;
+        this.mMimeType = mMimeType;
+        this.mAddDate = mAddDate;
+        this.mLatitude = mLatitude;
+        this.mLongitude = mLongitude;
+        this.mSize = mSize;
+        this.mDuration = mDuration;
+        this.mThumbPath = mThumbPath;
+        this.mMediaType = mMediaType;
+        this.isChecked = isChecked;
+        this.isDisable = isDisable;
+    }
+
     protected AlbumFile(Parcel in) {
         mPath = in.readString();
         mBucketName = in.readString();
