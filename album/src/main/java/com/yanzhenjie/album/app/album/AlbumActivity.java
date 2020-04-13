@@ -437,9 +437,9 @@ public class AlbumActivity extends BaseActivity implements
             mView.bindAlbumFolder(albumFolder);
         } else {
             albumFiles.add(0, albumFile);
-            if(radius > 0){
+            if (radius > 0) {
                 mView.notifyInsertItem(mHasCamera ? 1 : 0, albumFile);
-            } else  {
+            } else {
                 mView.notifyInsertItem(mHasCamera ? 1 : 0);
             }
         }
@@ -465,40 +465,51 @@ public class AlbumActivity extends BaseActivity implements
     }
 
     @Override
-    public void tryCheckItem(CompoundButton button, int position) {
-        AlbumFile albumFile = mAlbumFolders.get(mCurrentFolder).getAlbumFiles().get(position);
-        if (button.isChecked()) {
-            if (mCheckedList.size() >= mLimitCount) {
-                int messageRes;
-                switch (mFunction) {
-                    case Album.FUNCTION_CHOICE_IMAGE: {
-                        messageRes = R.plurals.album_check_image_limit;
-                        break;
+    public void tryCheckItem(CompoundButton button, String path) {
+        int position = -1;
+        ArrayList<AlbumFile> albumFiles = mAlbumFolders.get(mCurrentFolder).getAlbumFiles();
+        for (int i = 0; i < albumFiles.size(); i++) {
+            if (albumFiles.get(i).getPath().equals(path)) {
+                position = i;
+            }
+        }
+
+        if (position >= 0) {
+            AlbumFile albumFile = albumFiles.get(position);
+            if (button.isChecked()) {
+                if (mCheckedList.size() >= mLimitCount) {
+                    int messageRes;
+                    switch (mFunction) {
+                        case Album.FUNCTION_CHOICE_IMAGE: {
+                            messageRes = R.plurals.album_check_image_limit;
+                            break;
+                        }
+                        case Album.FUNCTION_CHOICE_VIDEO: {
+                            messageRes = R.plurals.album_check_video_limit;
+                            break;
+                        }
+                        case Album.FUNCTION_CHOICE_ALBUM: {
+                            messageRes = R.plurals.album_check_album_limit;
+                            break;
+                        }
+                        default: {
+                            throw new AssertionError("This should not be the case.");
+                        }
                     }
-                    case Album.FUNCTION_CHOICE_VIDEO: {
-                        messageRes = R.plurals.album_check_video_limit;
-                        break;
-                    }
-                    case Album.FUNCTION_CHOICE_ALBUM: {
-                        messageRes = R.plurals.album_check_album_limit;
-                        break;
-                    }
-                    default: {
-                        throw new AssertionError("This should not be the case.");
-                    }
+                    mView.toast(getResources().getQuantityString(messageRes, mLimitCount, mLimitCount));
+                    button.setChecked(false);
+                } else {
+                    albumFile.setChecked(true);
+                    mCheckedList.add(albumFile);
+                    setCheckedCount();
                 }
-                mView.toast(getResources().getQuantityString(messageRes, mLimitCount, mLimitCount));
-                button.setChecked(false);
             } else {
-                albumFile.setChecked(true);
-                mCheckedList.add(albumFile);
+                albumFile.setChecked(false);
+                mCheckedList.remove(albumFile);
                 setCheckedCount();
             }
-        } else {
-            albumFile.setChecked(false);
-            mCheckedList.remove(albumFile);
-            setCheckedCount();
         }
+
     }
 
     private void setCheckedCount() {

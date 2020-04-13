@@ -153,8 +153,8 @@ class AlbumView extends Contract.AlbumView implements View.OnClickListener {
         mAdapterSuggest = new AlbumAdapter(getContext(), false, choiceMode, widget.getMediaItemCheckSelector());
         mAdapterSuggest.setCheckedClickListener(new OnCheckedClickListener() {
             @Override
-            public void onCheckedClick(CompoundButton button, int position) {
-                getPresenter().tryCheckItem(button, position);
+            public void onCheckedClick(CompoundButton button, String path) {
+                getPresenter().tryCheckItem(button, path);
             }
         });
         mAdapterSuggest.setItemClickListener(new OnItemClickListener() {
@@ -175,8 +175,8 @@ class AlbumView extends Contract.AlbumView implements View.OnClickListener {
         });
         mAdapter.setCheckedClickListener(new OnCheckedClickListener() {
             @Override
-            public void onCheckedClick(CompoundButton button, int position) {
-                getPresenter().tryCheckItem(button, position);
+            public void onCheckedClick(CompoundButton button, String path) {
+                getPresenter().tryCheckItem(button, path);
             }
         });
         mAdapter.setItemClickListener(new OnItemClickListener() {

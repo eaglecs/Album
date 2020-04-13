@@ -20,13 +20,13 @@ import android.widget.CompoundButton;
 /**
  * Created by YanZhenjie on 2018/4/11.
  */
-public interface OnCheckedClickListener {
+public interface OnCheckedClickPositionListener {
 
     /**
      * Compound button is clicked.
      *
      * @param button   view.
-     * @param path the path in the list.
+     * @param position the position in the list.
      */
-    void onCheckedClick(CompoundButton button, String path);
+    void onCheckedClick(CompoundButton button, int position);
 }

@@ -50,9 +50,9 @@ public final class Contract {
          * Try to check item.
          *
          * @param button   view.
-         * @param position position of item.
+         * @param path path of item.
          */
-        void tryCheckItem(CompoundButton button, int position);
+        void tryCheckItem(CompoundButton button, String path);
 
         /**
          * Try to preview item.
