@@ -24,6 +24,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -214,6 +215,12 @@ public class AlbumActivity extends BaseActivity implements
                         albumFilesNoLocation.add(albumFile);
                     }
                 }
+                Collections.sort(albumFilesHasLocation, new Comparator<AlbumFile>() {
+                    @Override
+                    public int compare(AlbumFile albumFile1, AlbumFile albumFile2) {
+                        return Double.compare(albumFile1.getAddDate(), albumFile2.getAddDate());
+                    }
+                });
 
                 Collections.sort(albumFilesHasLocation, new Comparator<AlbumFile>() {
                     @Override
