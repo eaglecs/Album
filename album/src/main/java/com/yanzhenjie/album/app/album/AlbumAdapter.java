@@ -119,10 +119,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         mItemClickListener, new OnCheckedClickPositionListener() {
                     @Override
                     public void onCheckedClick(CompoundButton button, int position) {
-                        if (mAlbumFiles != null && mAlbumFiles.size() > position) {
-                            String path = mAlbumFiles.get(position).getPath();
-                            mCheckedClickListener.onCheckedClick(button, path);
-                        }
+                        mCheckedClickListener.onCheckedClick(button, position);
                     }
                 });
                 if (mChoiceMode == Album.MODE_MULTIPLE) {
@@ -141,11 +138,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         , new OnCheckedClickPositionListener() {
                     @Override
                     public void onCheckedClick(CompoundButton button, int position) {
-                        if (mAlbumFiles != null && mAlbumFiles.size() > position) {
-                            //Fix Bug For Video
-                            String path = mAlbumFiles.get(position).getPath();
-                            mCheckedClickListener.onCheckedClick(button, path);
-                        }
+                        mCheckedClickListener.onCheckedClick(button, position);
                     }
                 });
                 if (mChoiceMode == Album.MODE_MULTIPLE) {

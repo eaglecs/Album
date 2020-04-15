@@ -101,7 +101,7 @@ public class ImageActivity extends AppCompatActivity {
         Album.image(this)
                 .multipleChoice()
                 .camera(true)
-                .columnCount(4)
+                .columnCount(2)
                 .selectCount(6)
                 .radius(100)
                 .filterLocation(10.836945, 106.56528)

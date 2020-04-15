@@ -201,52 +201,45 @@ public class AlbumActivity extends BaseActivity implements
 
         mView.setLoadingDisplay(false);
 
-        if (lat > 0 || lng > 0) {
+        if (lat > 0 || lng > 0 && radius > 0) {
             for (int i = 0; i < albumFolders.size(); i++) {
                 AlbumFolder albumFolder = albumFolders.get(i);
                 ArrayList<AlbumFile> albumFiles = albumFolder.getAlbumFiles();
-                ArrayList<AlbumFile> albumFilesHasLocation = new ArrayList<>();
-                ArrayList<AlbumFile> albumFilesNoLocation = new ArrayList<>();
+                ArrayList<AlbumFile> albumFilesSuggest = new ArrayList<>();
+                ArrayList<AlbumFile> albumFilesRecent = new ArrayList<>();
+
                 for (int j = 0; j < albumFiles.size(); j++) {
                     AlbumFile albumFile = albumFiles.get(j);
                     if (albumFile.getLatitude() > 0 || albumFile.getLongitude() > 0) {
-                        albumFilesHasLocation.add(albumFile);
-                    } else {
-                        albumFilesNoLocation.add(albumFile);
-                    }
-                }
-                Collections.sort(albumFilesHasLocation, new Comparator<AlbumFile>() {
-                    @Override
-                    public int compare(AlbumFile albumFile1, AlbumFile albumFile2) {
-                        return Double.compare(albumFile1.getAddDate(), albumFile2.getAddDate());
-                    }
-                });
-
-                Collections.sort(albumFilesHasLocation, new Comparator<AlbumFile>() {
-                    @Override
-                    public int compare(AlbumFile albumFile1, AlbumFile albumFile2) {
-                        double lat1 = albumFile1.getLatitude();
-                        double lng1 = albumFile1.getLongitude();
-                        double lat2 = albumFile2.getLatitude();
-                        double lng2 = albumFile2.getLongitude();
-                        Location locationAlbum1 = new Location("Location Album 1");
-                        locationAlbum1.setLatitude(lat1);
-                        locationAlbum1.setLongitude(lng1);
-                        Location locationAlbum2 = new Location("Location Album 2");
-                        locationAlbum2.setLatitude(lat2);
-                        locationAlbum2.setLongitude(lng2);
+                        Location locationAlbum = new Location("Location Album 1");
+                        locationAlbum.setLatitude(albumFile.getLatitude());
+                        locationAlbum.setLongitude(albumFile.getLongitude());
                         Location locationUser = new Location("Location User");
                         locationUser.setLatitude(lat);
                         locationUser.setLongitude(lng);
-                        float distanceToAlbum1 = locationUser.distanceTo(locationAlbum1);
-                        float distanceToAlbum2 = locationUser.distanceTo(locationAlbum2);
-                        return Double.compare(distanceToAlbum1, distanceToAlbum2);
+                        float distanceToAlbum = locationUser.distanceTo(locationAlbum);
+                        if (distanceToAlbum > radius) {
+                            albumFilesRecent.add(albumFile);
+                        } else {
+                            albumFilesSuggest.add(albumFile);
+                        }
+                    } else {
+                        albumFilesRecent.add(albumFile);
                     }
-                });
+                }
 
+                if (!albumFilesSuggest.isEmpty()) {
+                    Collections.sort(albumFilesSuggest, new Comparator<AlbumFile>() {
+                        @Override
+                        public int compare(AlbumFile albumFile1, AlbumFile albumFile2) {
+                            return Double.compare(albumFile1.getAddDate(), albumFile2.getAddDate());
+                        }
+                    });
+                }
                 albumFolder.getAlbumFiles().clear();
-                albumFolder.addAlbumFiles(albumFilesHasLocation);
-                albumFolder.addAlbumFiles(albumFilesNoLocation);
+                albumFolder.getAlbumFilesSuggest().clear();
+                albumFolder.addAlbumFiles(albumFilesRecent);
+                albumFolder.addAlbumFilesSuggest(albumFilesSuggest);
             }
         }
 
@@ -472,51 +465,48 @@ public class AlbumActivity extends BaseActivity implements
     }
 
     @Override
-    public void tryCheckItem(CompoundButton button, String path) {
-        int position = -1;
-        ArrayList<AlbumFile> albumFiles = mAlbumFolders.get(mCurrentFolder).getAlbumFiles();
-        for (int i = 0; i < albumFiles.size(); i++) {
-            if (albumFiles.get(i).getPath().equals(path)) {
-                position = i;
-            }
+    public void tryCheckItem(CompoundButton button, int position, Boolean isSuggestPhoto) {
+        AlbumFolder albumFolder = mAlbumFolders.get(mCurrentFolder);
+        AlbumFile albumFile;
+        if (isSuggestPhoto) {
+            ArrayList<AlbumFile> albumFiles = albumFolder.getAlbumFilesSuggest();
+            albumFile = albumFiles.get(position);
+        } else {
+            ArrayList<AlbumFile> albumFiles = albumFolder.getAlbumFiles();
+            albumFile = albumFiles.get(position);
         }
-
-        if (position >= 0) {
-            AlbumFile albumFile = albumFiles.get(position);
-            if (button.isChecked()) {
-                if (mCheckedList.size() >= mLimitCount) {
-                    int messageRes;
-                    switch (mFunction) {
-                        case Album.FUNCTION_CHOICE_IMAGE: {
-                            messageRes = R.plurals.album_check_image_limit;
-                            break;
-                        }
-                        case Album.FUNCTION_CHOICE_VIDEO: {
-                            messageRes = R.plurals.album_check_video_limit;
-                            break;
-                        }
-                        case Album.FUNCTION_CHOICE_ALBUM: {
-                            messageRes = R.plurals.album_check_album_limit;
-                            break;
-                        }
-                        default: {
-                            throw new AssertionError("This should not be the case.");
-                        }
+        if (button.isChecked()) {
+            if (mCheckedList.size() >= mLimitCount) {
+                int messageRes;
+                switch (mFunction) {
+                    case Album.FUNCTION_CHOICE_IMAGE: {
+                        messageRes = R.plurals.album_check_image_limit;
+                        break;
                     }
-                    mView.toast(getResources().getQuantityString(messageRes, mLimitCount, mLimitCount));
-                    button.setChecked(false);
-                } else {
-                    albumFile.setChecked(true);
-                    mCheckedList.add(albumFile);
-                    setCheckedCount();
+                    case Album.FUNCTION_CHOICE_VIDEO: {
+                        messageRes = R.plurals.album_check_video_limit;
+                        break;
+                    }
+                    case Album.FUNCTION_CHOICE_ALBUM: {
+                        messageRes = R.plurals.album_check_album_limit;
+                        break;
+                    }
+                    default: {
+                        throw new AssertionError("This should not be the case.");
+                    }
                 }
+                mView.toast(getResources().getQuantityString(messageRes, mLimitCount, mLimitCount));
+                button.setChecked(false);
             } else {
-                albumFile.setChecked(false);
-                mCheckedList.remove(albumFile);
+                albumFile.setChecked(true);
+                mCheckedList.add(albumFile);
                 setCheckedCount();
             }
+        } else {
+            albumFile.setChecked(false);
+            mCheckedList.remove(albumFile);
+            setCheckedCount();
         }
-
     }
 
     private void setCheckedCount() {

@@ -153,8 +153,8 @@ class AlbumView extends Contract.AlbumView implements View.OnClickListener {
         mAdapterSuggest = new AlbumAdapter(getContext(), false, choiceMode, widget.getMediaItemCheckSelector());
         mAdapterSuggest.setCheckedClickListener(new OnCheckedClickListener() {
             @Override
-            public void onCheckedClick(CompoundButton button, String path) {
-                getPresenter().tryCheckItem(button, path);
+            public void onCheckedClick(CompoundButton button, int position) {
+                getPresenter().tryCheckItem(button, position, true);
             }
         });
         mAdapterSuggest.setItemClickListener(new OnItemClickListener() {
@@ -175,8 +175,8 @@ class AlbumView extends Contract.AlbumView implements View.OnClickListener {
         });
         mAdapter.setCheckedClickListener(new OnCheckedClickListener() {
             @Override
-            public void onCheckedClick(CompoundButton button, String path) {
-                getPresenter().tryCheckItem(button, path);
+            public void onCheckedClick(CompoundButton button, int position) {
+                getPresenter().tryCheckItem(button, position, false);
             }
         });
         mAdapter.setItemClickListener(new OnItemClickListener() {
@@ -228,40 +228,10 @@ class AlbumView extends Contract.AlbumView implements View.OnClickListener {
 
     @Override
     public void bindAlbumFolder(AlbumFolder albumFolder) {
-        if (mActivity instanceof AlbumActivity) {
-            ((AlbumActivity) mActivity).showLoadingDialog();
-        }
         mBtnSwitchFolder.setText(albumFolder.getName());
-        ArrayList<AlbumFile> albums = albumFolder.getAlbumFiles();
-        ArrayList<AlbumFile> albumsSuggest = new ArrayList<>();
-        ArrayList<AlbumFile> albumsRecent = new ArrayList<>();
-        if (radius > 0) {
-            for (int i = 0; i < albums.size(); i++) {
-                AlbumFile albumFile = albums.get(i);
-                if ((albumFile.getLongitude() > 0 || albumFile.getLatitude() > 0) && (lat > 0 || lng > 0)) {
-                    Location locationAlbum = new Location("Location Album 2");
-                    locationAlbum.setLatitude(albumFile.getLatitude());
-                    locationAlbum.setLongitude(albumFile.getLongitude());
-                    Location locationUser = new Location("Location User");
-                    locationUser.setLatitude(lat);
-                    locationUser.setLongitude(lng);
-                    float distanceToAlbum = locationUser.distanceTo(locationAlbum);
-                    if (distanceToAlbum <= radius) {
-                        albumsSuggest.add(albumFile);
-                    } else {
-                        albumsRecent.add(albumFile);
-                    }
-                } else {
-                    albumsRecent.add(albumFile);
-                }
-            }
-        } else {
-            albumsRecent.addAll(albums);
-        }
-
-        mAdapterSuggest.setAlbumFiles(albumsSuggest);
+        mAdapterSuggest.setAlbumFiles(albumFolder.getAlbumFilesSuggest());
         mAdapterSuggest.notifyDataSetChanged();
-        if (albumsSuggest.isEmpty()) {
+        if (albumFolder.getAlbumFilesSuggest().isEmpty()) {
             rvSuggest.setVisibility(View.GONE);
             tvTitleSuggest.setVisibility(View.GONE);
         } else {
@@ -270,14 +240,10 @@ class AlbumView extends Contract.AlbumView implements View.OnClickListener {
             tvTitleSuggest.setVisibility(View.VISIBLE);
         }
 
-        mAdapter.setAlbumFiles(albumsRecent);
+        mAdapter.setAlbumFiles(albumFolder.getAlbumFiles());
         mAdapter.notifyDataSetChanged();
-        if (!albumsRecent.isEmpty() || hasCamera) {
+        if (!albumFolder.getAlbumFiles().isEmpty() || hasCamera) {
             mRecyclerView.scrollToPosition(0);
-        }
-
-        if (mActivity instanceof AlbumActivity) {
-            ((AlbumActivity) mActivity).dismissLoadingDialog();
         }
     }
 

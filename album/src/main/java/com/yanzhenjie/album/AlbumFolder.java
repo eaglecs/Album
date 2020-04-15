@@ -34,6 +34,8 @@ public class AlbumFolder implements Parcelable {
      * Image list in folder.
      */
     private ArrayList<AlbumFile> mAlbumFiles = new ArrayList<>();
+
+    private ArrayList<AlbumFile> mAlbumFilesSuggest = new ArrayList<>();
     /**
      * checked.
      */
@@ -54,12 +56,23 @@ public class AlbumFolder implements Parcelable {
         return mAlbumFiles;
     }
 
+    public ArrayList<AlbumFile> getAlbumFilesSuggest() {
+        return mAlbumFilesSuggest;
+    }
+
     public void addAlbumFiles(ArrayList<AlbumFile> albumFiles) {
         mAlbumFiles.addAll(albumFiles);
     }
 
+    public void addAlbumFilesSuggest(ArrayList<AlbumFile> albumFiles) {
+        mAlbumFilesSuggest.addAll(albumFiles);
+    }
+
     public void addAlbumFile(AlbumFile albumFile) {
         mAlbumFiles.add(albumFile);
+    }
+    public void addAlbumFileSuggest(AlbumFile albumFile) {
+        mAlbumFilesSuggest.add(albumFile);
     }
 
     public boolean isChecked() {
@@ -73,6 +86,7 @@ public class AlbumFolder implements Parcelable {
     protected AlbumFolder(Parcel in) {
         name = in.readString();
         mAlbumFiles = in.createTypedArrayList(AlbumFile.CREATOR);
+        mAlbumFilesSuggest = in.createTypedArrayList(AlbumFile.CREATOR);
         isChecked = in.readByte() != 0;
     }
 
@@ -80,6 +94,7 @@ public class AlbumFolder implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeTypedList(mAlbumFiles);
+        dest.writeTypedList(mAlbumFilesSuggest);
         dest.writeByte((byte) (isChecked ? 1 : 0));
     }
 
