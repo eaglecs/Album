@@ -232,7 +232,7 @@ public class AlbumActivity extends BaseActivity implements
                     Collections.sort(albumFilesSuggest, new Comparator<AlbumFile>() {
                         @Override
                         public int compare(AlbumFile albumFile1, AlbumFile albumFile2) {
-                            return Double.compare(albumFile1.getAddDate(), albumFile2.getAddDate());
+                            return Double.compare(albumFile2.getAddDate(), albumFile1.getAddDate());
                         }
                     });
                 }
