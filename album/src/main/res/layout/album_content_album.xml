@@ -16,18 +16,53 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvPhoto"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/app_bar_layout"
-        android:minHeight="100dp" />
+        android:orientation="vertical">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvTitleSuggest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/album_dp_10"
+            android:text="@string/album_text_suggest"
+            android:textColor="@color/albumColorPrimaryBlack"
+            android:textSize="@dimen/album_sp_16"
+            android:textStyle="bold" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvSuggest"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:nestedScrollingEnabled="false" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvTitleRecent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/album_dp_10"
+            android:text="@string/album_recent"
+            android:textColor="@color/albumColorPrimaryBlack"
+            android:textSize="@dimen/album_sp_16"
+            android:textStyle="bold" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:nestedScrollingEnabled="false" />
+    </LinearLayout>
+
 
     <RelativeLayout
         style="@style/Album.MatchParent.SheetBottom"
         android:layout_alignParentBottom="true"
         android:background="@color/albumSheetBottom"
-        tools:visibility="gone">
+        android:visibility="gone">
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_switch_dir"
