@@ -16,54 +16,12 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.v4.widget.NestedScrollView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvPhoto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/app_bar_layout">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/app_bar_layout"
-            android:orientation="vertical">
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tvTitleSuggest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/album_dp_10"
-                android:text="@string/album_text_suggest"
-                android:textColor="@color/albumColorPrimaryBlack"
-                android:textSize="@dimen/album_sp_16"
-                android:textStyle="bold" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvSuggest"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="100dp"
-                android:nestedScrollingEnabled="false" />
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tvTitleRecent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/album_dp_10"
-                android:text="@string/album_recent"
-                android:textColor="@color/albumColorPrimaryBlack"
-                android:textSize="@dimen/album_sp_16"
-                android:textStyle="bold" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvPhoto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="100dp"
-                android:nestedScrollingEnabled="false" />
-        </LinearLayout>
-
-    </android.support.v4.widget.NestedScrollView>
-
+        android:layout_height="wrap_content"
+        android:layout_below="@id/app_bar_layout"
+        android:minHeight="100dp" />
 
     <RelativeLayout
         style="@style/Album.MatchParent.SheetBottom"

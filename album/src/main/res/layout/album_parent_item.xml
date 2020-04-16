@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/album_dp_10"
+        android:text="@string/album_text_suggest"
+        android:textColor="@color/albumColorPrimaryBlack"
+        android:textSize="@dimen/album_sp_16"
+        android:textStyle="bold" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvAlbum"
+        style="@style/Album.WrapContent.WidthMatchParent" />
+</LinearLayout>
