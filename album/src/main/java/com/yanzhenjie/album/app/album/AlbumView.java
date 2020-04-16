@@ -58,14 +58,13 @@ class AlbumView extends Contract.AlbumView implements View.OnClickListener {
     private MenuItem mCompleteMenu;
 
     private RecyclerView mRecyclerView;
-//    private AppCompatTextView tvTitleSuggest;
-//    private AppCompatTextView tvTitleRecent;
-//    private RecyclerView rvSuggest;
-//    private GridLayoutManager mLayoutManager;
-    private LinearLayoutManager mLayoutManager;
-//    private GridLayoutManager mLayoutManagerSuggest;
-    private ParentAdapter mAdapter;
-//    private AlbumAdapter mAdapterSuggest;
+    private AppCompatTextView tvTitleSuggest;
+    private AppCompatTextView tvTitleRecent;
+    private RecyclerView rvSuggest;
+    private GridLayoutManager mLayoutManager;
+    private GridLayoutManager mLayoutManagerSuggest;
+    private AlbumAdapter mAdapter;
+    private AlbumAdapter mAdapterSuggest;
 
     private Button mBtnPreview;
     private Button mBtnSwitchFolder;
@@ -83,11 +82,9 @@ class AlbumView extends Contract.AlbumView implements View.OnClickListener {
 
         this.mToolbar = activity.findViewById(R.id.toolbar);
         this.mRecyclerView = activity.findViewById(R.id.rvPhoto);
-//        this.tvTitleSuggest = activity.findViewById(R.id.tvTitleSuggest);
-//        this.tvTitleRecent = activity.findViewById(R.id.tvTitleRecent);
-//        this.rvSuggest = activity.findViewById(R.id.rvSuggest);
-//        rvSuggest.setNestedScrollingEnabled(false);
-//        mRecyclerView.setNestedScrollingEnabled(false);
+        this.tvTitleSuggest = activity.findViewById(R.id.tvTitleSuggest);
+        this.tvTitleRecent = activity.findViewById(R.id.tvTitleRecent);
+        this.rvSuggest = activity.findViewById(R.id.rvSuggest);
 
         this.mBtnSwitchFolder = activity.findViewById(R.id.btn_switch_dir);
         this.mBtnPreview = activity.findViewById(R.id.btn_preview);
@@ -146,48 +143,48 @@ class AlbumView extends Contract.AlbumView implements View.OnClickListener {
         mToolbar.setBackgroundColor(widget.getToolBarColor());
 
         Configuration config = mActivity.getResources().getConfiguration();
-        mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-//        mLayoutManagerSuggest = new GridLayoutManager(getContext(), column, getOrientation(config), false);
+        mLayoutManager = new GridLayoutManager(getContext(), column, getOrientation(config), false);
+        mLayoutManagerSuggest = new GridLayoutManager(getContext(), column, getOrientation(config), false);
         mRecyclerView.setLayoutManager(mLayoutManager);
-//        rvSuggest.setLayoutManager(mLayoutManagerSuggest);
-//        int dividerSize = getResources().getDimensionPixelSize(R.dimen.album_dp_4);
-//        mRecyclerView.addItemDecoration(new Api21ItemDivider(Color.TRANSPARENT, dividerSize, dividerSize));
-//        rvSuggest.addItemDecoration(new Api21ItemDivider(Color.TRANSPARENT, dividerSize, dividerSize));
-//        mAdapterSuggest = new AlbumAdapter(getContext(), false, choiceMode, widget.getMediaItemCheckSelector());
-//        mAdapterSuggest.setCheckedClickListener(new OnCheckedClickListener() {
-//            @Override
-//            public void onCheckedClick(CompoundButton button, int position) {
-//                getPresenter().tryCheckItem(button, position, true);
-//            }
-//        });
-//        mAdapterSuggest.setItemClickListener(new OnItemClickListener() {
-//            @Override
-//            public void onItemClick(View view, int position) {
-//                getPresenter().tryPreviewItem(position);
-//            }
-//        });
-//        rvSuggest.setAdapter(mAdapterSuggest);
-        mAdapter = new ParentAdapter(getContext(), column, widget,  hasCamera, choiceMode, getPresenter());
-//
-//        mAdapter = new AlbumAdapter(getContext(), hasCamera, choiceMode, widget.getMediaItemCheckSelector());
-//        mAdapter.setAddClickListener(new OnItemClickListener() {
-//            @Override
-//            public void onItemClick(View view, int position) {
-//                getPresenter().clickCamera(view);
-//            }
-//        });
-//        mAdapter.setCheckedClickListener(new OnCheckedClickListener() {
-//            @Override
-//            public void onCheckedClick(CompoundButton button, int position) {
-//                getPresenter().tryCheckItem(button, position, false);
-//            }
-//        });
-//        mAdapter.setItemClickListener(new OnItemClickListener() {
-//            @Override
-//            public void onItemClick(View view, int position) {
-//                getPresenter().tryPreviewItem(position);
-//            }
-//        });
+        rvSuggest.setLayoutManager(mLayoutManagerSuggest);
+        int dividerSize = getResources().getDimensionPixelSize(R.dimen.album_dp_4);
+        mRecyclerView.addItemDecoration(new Api21ItemDivider(Color.TRANSPARENT, dividerSize, dividerSize));
+        rvSuggest.addItemDecoration(new Api21ItemDivider(Color.TRANSPARENT, dividerSize, dividerSize));
+        mAdapterSuggest = new AlbumAdapter(getContext(), false, choiceMode, widget.getMediaItemCheckSelector());
+        mAdapterSuggest.setCheckedClickListener(new OnCheckedClickListener() {
+            @Override
+            public void onCheckedClick(CompoundButton button, int position) {
+                getPresenter().tryCheckItem(button, position, true);
+            }
+        });
+        mAdapterSuggest.setItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                getPresenter().tryPreviewItem(position);
+            }
+        });
+        rvSuggest.setAdapter(mAdapterSuggest);
+
+
+        mAdapter = new AlbumAdapter(getContext(), hasCamera, choiceMode, widget.getMediaItemCheckSelector());
+        mAdapter.setAddClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                getPresenter().clickCamera(view);
+            }
+        });
+        mAdapter.setCheckedClickListener(new OnCheckedClickListener() {
+            @Override
+            public void onCheckedClick(CompoundButton button, int position) {
+                getPresenter().tryCheckItem(button, position, false);
+            }
+        });
+        mAdapter.setItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                getPresenter().tryPreviewItem(position);
+            }
+        });
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -198,15 +195,15 @@ class AlbumView extends Contract.AlbumView implements View.OnClickListener {
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-//        int position = mLayoutManager.findFirstVisibleItemPosition();
-//        mLayoutManager.setOrientation(getOrientation(newConfig));
-//        mRecyclerView.setAdapter(mAdapter);
-//        mLayoutManager.scrollToPosition(position);
-//
-//        int positionSuggest = mLayoutManagerSuggest.findFirstVisibleItemPosition();
-//        mLayoutManagerSuggest.setOrientation(getOrientation(newConfig));
-//        rvSuggest.setAdapter(mAdapterSuggest);
-//        mLayoutManagerSuggest.scrollToPosition(positionSuggest);
+        int position = mLayoutManager.findFirstVisibleItemPosition();
+        mLayoutManager.setOrientation(getOrientation(newConfig));
+        mRecyclerView.setAdapter(mAdapter);
+        mLayoutManager.scrollToPosition(position);
+
+        int positionSuggest = mLayoutManagerSuggest.findFirstVisibleItemPosition();
+        mLayoutManagerSuggest.setOrientation(getOrientation(newConfig));
+        rvSuggest.setAdapter(mAdapterSuggest);
+        mLayoutManagerSuggest.scrollToPosition(positionSuggest);
     }
 
     @RecyclerView.Orientation
@@ -232,36 +229,34 @@ class AlbumView extends Contract.AlbumView implements View.OnClickListener {
     @Override
     public void bindAlbumFolder(AlbumFolder albumFolder) {
         mBtnSwitchFolder.setText(albumFolder.getName());
-//        mAdapterSuggest.setAlbumFiles(albumFolder.getAlbumFilesSuggest());
-//        mAdapterSuggest.notifyDataSetChanged();
-//        if (albumFolder.getAlbumFilesSuggest().isEmpty()) {
-//            rvSuggest.setVisibility(View.GONE);
-//            tvTitleSuggest.setVisibility(View.GONE);
-//        } else {
-//            rvSuggest.setVisibility(View.VISIBLE);
-//            rvSuggest.scrollToPosition(0);
-//            tvTitleSuggest.setVisibility(View.VISIBLE);
-//        }
+        mAdapterSuggest.setAlbumFiles(albumFolder.getAlbumFilesSuggest());
+        mAdapterSuggest.notifyDataSetChanged();
+        if (albumFolder.getAlbumFilesSuggest().isEmpty()) {
+            rvSuggest.setVisibility(View.GONE);
+            tvTitleSuggest.setVisibility(View.GONE);
+        } else {
+            rvSuggest.setVisibility(View.VISIBLE);
+            rvSuggest.scrollToPosition(0);
+            tvTitleSuggest.setVisibility(View.VISIBLE);
+        }
 
-        mAdapter.setAlbumFolder(albumFolder);
+        mAdapter.setAlbumFiles(albumFolder.getAlbumFiles());
         mAdapter.notifyDataSetChanged();
-//        if (!albumFolder.getAlbumFiles().isEmpty() || hasCamera) {
-//            mRecyclerView.scrollToPosition(0);
-//        }
+        if (!albumFolder.getAlbumFiles().isEmpty() || hasCamera) {
+            mRecyclerView.scrollToPosition(0);
+        }
     }
 
     @Override
     public void notifyInsertItem(int position) {
-//        mAdapter.notifyItemInserted(position);
-        mAdapter.notifyDataSetChanged();
+        mAdapter.notifyItemInserted(position);
+
     }
 
     @Override
     public void notifyInsertItem(int position, AlbumFile albumFile) {
-//        mAdapter.addItem(albumFile);
-//        mAdapter.notifyItemInserted(position);
-//        mAdapter.notifyInsertItem(albumFile);
-        mAdapter.notifyDataSetChanged();
+        mAdapter.addItem(albumFile);
+        mAdapter.notifyItemInserted(position);
     }
 
     @Override
